@@ -26,9 +26,11 @@ function NavigationBar() {
             </NavDropdown>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">More deets</Nav.Link>
+            <Nav.Link href="#deets">
+              <button>About us </button>
+            </Nav.Link>
             <Nav.Link eventKey={2} href="#memes">
-              Dank memes
+              <button>Contact us</button>
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
@@ -37,4 +39,4 @@ function NavigationBar() {
   );
 }
 
-export default NavigationBar;
+export default NavigationBar ;
