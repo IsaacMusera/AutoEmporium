@@ -28,12 +28,12 @@ function NavigationBar() {
           </Nav>
           <Nav>
           <Nav.Link eventKey={2} href="#contacts">
-              <button>About us</button>
+              <button>About</button>
             </Nav.Link>
           </Nav>
           <Nav>
           <Nav.Link eventKey={2} href="#contacts">
-              <button>Contact us</button>
+              <button>Contact</button>
             </Nav.Link>
           </Nav>
             
