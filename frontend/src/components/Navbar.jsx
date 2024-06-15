@@ -2,6 +2,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { NavLink } from 'react-router-dom';
 
 function NavigationBar() {
   return (
@@ -26,13 +27,18 @@ function NavigationBar() {
             </NavDropdown>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">
-              <button>About us </button>
+          <Nav.Link eventKey={2} href="#contacts">
+              <button>About us</button>
             </Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
+          </Nav>
+          <Nav>
+          <Nav.Link eventKey={2} href="#contacts">
               <button>Contact us</button>
             </Nav.Link>
           </Nav>
+            
+              
+            
         </Navbar.Collapse>
       </Container>
     </Navbar>

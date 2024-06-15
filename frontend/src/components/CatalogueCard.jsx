@@ -1,7 +1,7 @@
 import { Card, Button} from "react-bootstrap"
 
 
-function Catalogcard() {
+function CatalogueCard() {
   return (
     <Card style={{ width: '18rem' }}>
     <Card.Img
@@ -19,4 +19,4 @@ function Catalogcard() {
   )
 }
 
-export default Catalogcard
+export default CatalogueCard;
