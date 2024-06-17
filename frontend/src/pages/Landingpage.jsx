@@ -12,7 +12,7 @@ function LandingPage() {
         alignItems: 'center'
       }}>
         <h1 style={{ color: 'blue' }}>Welcome to AutoEmporium</h1>
-        <nav>
+        <nav style={{ padding: '80px' }}>
           <ul>
             <li><Link to="/catalogue">Home</Link></li>
             <li><Link to="/about">About</Link></li>
