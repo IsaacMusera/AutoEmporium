@@ -36,7 +36,7 @@ const ContactPage = () => {
               lot is off Main Street, just past the showroom entrance.
             </p>
             <h4 className="text-center">Hours of Operation:</h4>
-            <p className="text-center">
+            <p className="text-center">otstrap raw
               Monday - Friday: 9:00 AM - 7:00 PM
               <br />
               Saturday: 10:00 AM - 6:00 PM
