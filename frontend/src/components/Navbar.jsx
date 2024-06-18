@@ -30,12 +30,12 @@ function NavigationBar() {
           </Nav>
           <Nav>
             <Nav.Link eventKey={2} href="#contacts">
-              <button>About</button>
+              <button></button>
             </Nav.Link>
           </Nav>
           <Nav>
             <Nav.Link eventKey={2} href="#contacts">
-              <button>Contact</button>
+              <button></button>
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
