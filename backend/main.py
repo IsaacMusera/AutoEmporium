@@ -22,9 +22,11 @@ class Car(BaseModel):
     carprice: int
     cardescription: str
     carmodel: str
+    carpricemodel: str
     caryearofmanufacture: int
     carenginesize: int
     cartransmission: str
+    dealership_id: int
 
 # Database interaction function to insert a car
 def insert_car(car: Car):
@@ -33,9 +35,9 @@ def insert_car(car: Car):
     
     try:
         cursor.execute('''
-        INSERT INTO cars (id, carname, carprice, cardescription, carmodel, caryearofmanufacture, carenginesize, cartransmission)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (car.id, car.carname, car.carprice, car.cardescription, car.carmodel, car.caryearofmanufacture, car.carenginesize, car.cartransmission))
+        INSERT INTO cars (id, carname, carprice, cardescription, carmodel, carpricemodel, caryearofmanufacture, carenginesize, cartransmission, dealership_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (car.id, car.carname, car.carprice, car.cardescription, car.carmodel, car.carpricemodel, car.caryearofmanufacture, car.carenginesize, car.cartransmission, car.dealership_id))
         conn.commit()
     except sqlite3.IntegrityError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -48,9 +50,9 @@ def get_all_cars():
     cursor = conn.cursor()
     
     try:
-        cursor.execute('SELECT id, carname, carprice, cardescription, carmodel, caryearofmanufacture, carenginesize, cartransmission FROM cars')
+        cursor.execute('SELECT id, carname, carprice, cardescription, carmodel, carpricemodel, caryearofmanufacture, carenginesize, cartransmission, dealership_id FROM cars')
         rows = cursor.fetchall()
-        cars = [Car(id=row[0], carname=row[1], carprice=row[2], cardescription=row[3], carmodel=row[4], caryearofmanufacture=row[5], carenginesize=row[6], cartransmission=row[7]) for row in rows]
+        cars = [Car(id=row[0], carname=row[1], carprice=row[2], cardescription=row[3], carmodel=row[4], carpricemodel=row[5], caryearofmanufacture=row[6], carenginesize=row[7], cartransmission=row[8]) for row in rows]
     except sqlite3.DatabaseError as e: 
         raise HTTPException(status_code=500, detail=str(e))
     finally:
