@@ -1,8 +1,9 @@
+import sqlite3
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-import sqlite3
 from typing import List
+from car import Car, create_car, delete_car, get_all_cars, find_car_by_id
+from dealership import Dealership, create_dealership, delete_dealership, get_all_dealerships, find_dealership_by_id
 
 app = FastAPI()
 
@@ -15,63 +16,85 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Define the request model
-class Car(BaseModel):
-    id: int
-    carname: str
-    carprice: int
-    cardescription: str
-    carmodel: str
-    carpricemodel: str
-    caryearofmanufacture: int
-    carenginesize: int
-    cartransmission: str
-    dealership_id: int
+# Define the route to create a dealership
+@app.post("/dealerships/", response_model=Dealership)
+async def create_dealership_route(dealership: Dealership):
+    return create_dealership(dealership)
 
-# Database interaction function to insert a car
-def insert_car(car: Car):
-    conn = sqlite3.connect('cars.db')
-    cursor = conn.cursor()
-    
-    try:
-        cursor.execute('''
-        INSERT INTO cars (id, carname, carprice, cardescription, carmodel, carpricemodel, caryearofmanufacture, carenginesize, cartransmission, dealership_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (car.id, car.carname, car.carprice, car.cardescription, car.carmodel, car.carpricemodel, car.caryearofmanufacture, car.carenginesize, car.cartransmission, car.dealership_id))
-        conn.commit()
-    except sqlite3.IntegrityError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        conn.close()
+# Define the route to delete a dealership
+@app.delete("/dealerships/{dealership_id}")
+async def delete_dealership_route(dealership_id: int):
+    delete_dealership(dealership_id)
+    return {"message": "Dealership deleted successfully"}
 
-# Database interaction function to get all cars
-def get_all_cars():
-    conn = sqlite3.connect('cars.db')
-    cursor = conn.cursor()
-    
-    try:
-        cursor.execute('SELECT id, carname, carprice, cardescription, carmodel, carpricemodel, caryearofmanufacture, carenginesize, cartransmission, dealership_id FROM cars')
-        rows = cursor.fetchall()
-        cars = [Car(id=row[0], carname=row[1], carprice=row[2], cardescription=row[3], carmodel=row[4], carpricemodel=row[5], caryearofmanufacture=row[6], carenginesize=row[7], cartransmission=row[8]) for row in rows]
-    except sqlite3.DatabaseError as e: 
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        conn.close()
-    
-    return cars
+# Define the route to get all dealerships
+@app.get("/dealerships/", response_model=List[Dealership])
+async def get_all_dealerships_route():
+    return get_all_dealerships()
 
-# Define the route to insert a car
+# Define the route to find a dealership by id
+@app.get("/dealerships/{dealership_id}", response_model=Dealership)
+async def find_dealership_by_id_route(dealership_id: int):
+    dealership = find_dealership_by_id(dealership_id)
+    if not dealership:
+        raise HTTPException(status_code=404, detail="Dealership not found")
+    return dealership
+
+# Define the route to create a car
 @app.post("/cars/", response_model=Car)
-async def create_car(car: Car):
-    insert_car(car)
-    return car
+async def create_car_route(car: Car):
+    return create_car(car)
+
+# Define the route to delete a car
+@app.delete("/cars/{car_id}")
+async def delete_car_route(car_id: int):
+    delete_car(car_id)
+    return {"message": "Car deleted successfully"}
 
 # Define the route to get all cars
 @app.get("/cars/", response_model=List[Car])
-async def read_cars():
-    cars = get_all_cars()
-    return cars
+async def get_all_cars_route():
+    return get_all_cars()
+
+# Define the route to find a car by id
+@app.get("/cars/{car_id}", response_model=Car)
+async def find_car_by_id_route(car_id: int):
+    car = find_car_by_id(car_id)
+    if not car:
+        raise HTTPException(status_code=404, detail="Car not found")
+    return car
+
+# Database interaction function to create tables
+def create_tables():
+    conn = sqlite3.connect('cars.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS dealerships (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        address TEXT NOT NULL
+    )
+    ''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS cars (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        carname TEXT NOT NULL,
+        carprice INTEGER NOT NULL,
+        cardescription TEXT NOT NULL,
+        carmodel TEXT NOT NULL,
+        carpricemodel TEXT NOT NULL,
+        caryearofmanufacture INTEGER NOT NULL,
+        carenginesize INTEGER NOT NULL,
+        cartransmission TEXT NOT NULL,
+        dealership_id INTEGER NOT NULL,
+        FOREIGN KEY(dealership_id) REFERENCES dealerships(id)
+    )
+    ''')
+    conn.commit()
+    conn.close()
+
+# Initialize the database tables
+create_tables()
 
 # Run the application using:
 # uvicorn main:app --reload
-
